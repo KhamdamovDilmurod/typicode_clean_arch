@@ -5,6 +5,7 @@ class Post extends Equatable {
   final String title;
   final String body;
   final int userId;
+  bool isSaved  = false;
 
   Post({
     required this.id,
