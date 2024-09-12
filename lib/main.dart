@@ -7,9 +7,10 @@ import 'package:typicode_clean_arch/features/typicode/domain/usecases/remove_pos
 import 'package:typicode_clean_arch/features/typicode/domain/usecases/save_post_usecase.dart';
 import 'features/typicode/presentation/bloc/posts_bloc.dart';
 import 'features/typicode/presentation/bloc/users_bloc.dart';
-import 'features/typicode/presentation/pages/user_post_screen.dart';
-
+import 'features/typicode/presentation/pages/main/widgets/placeholder.dart';
+import 'features/typicode/presentation/pages/main_screen.dart';
 import 'injection_container.dart' as di;
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: UserPostScreen(),
+        home: MainScreen(),
         // onGenerateRoute: di.sl<AppRouter>().onGenerateRoute,
       ),
     );

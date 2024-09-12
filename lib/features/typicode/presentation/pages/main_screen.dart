@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:typicode_clean_arch/features/typicode/presentation/widgets/user_item_view.dart';
+import 'package:typicode_clean_arch/features/typicode/presentation/pages/main/widgets/banner_section.dart';
+import 'package:typicode_clean_arch/features/typicode/presentation/pages/main/widgets/shimmer_user_view.dart';
+import '../../../../core/utilities/colors.dart';
 import '../bloc/posts_bloc.dart';
 import '../bloc/users_bloc.dart';
 import '../../domain/entities/post.dart';
 import '../../domain/entities/user.dart';
-import '../widgets/post_item_view.dart';
+import 'main/widgets/post_item_view.dart';
+import 'main/widgets/user_item_view.dart';
 
-class UserPostScreen extends StatefulWidget {
+class MainScreen extends StatefulWidget {
   @override
-  _UserPostScreenState createState() => _UserPostScreenState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class _UserPostScreenState extends State<UserPostScreen> {
+class _MainScreenState extends State<MainScreen> {
   late PostsBloc _postsBloc;
   late UsersBloc _usersBloc;
 
@@ -28,25 +31,43 @@ class _UserPostScreenState extends State<UserPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('User & Post Management', style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-      ),
+      backgroundColor: kBackgroundColor,
+      appBar: _appBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionTitle('Users'),
             _buildUserSection(),
-            SizedBox(height: 20),
+            _bannerSection(),
             _buildSectionTitle('Posts'),
             _buildPostSection(),
           ],
         ),
       ),
     );
+  }
+
+
+  PreferredSizeWidget _appBar(){
+    return AppBar(
+      iconTheme: IconThemeData(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [kPrimaryColor,kAccentColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+      ),
+      title: Text("Blog App", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+    );
+  }
+
+
+  Widget _bannerSection(){
+    return BannerSection();
   }
 
   Widget _buildSectionTitle(String title) {
@@ -75,7 +96,7 @@ class _UserPostScreenState extends State<UserPostScreen> {
     return BlocBuilder<UsersBloc, UsersState>(
       builder: (context, state) {
         if (state is UsersLoading) {
-          return Center(child: CircularProgressIndicator());
+          return ShimmerUserView();
         } else if (state is UserError) {
           return Center(child: Text('Error: ${state.failure}'));
         } else if (state is UsersLoaded) {
@@ -88,9 +109,8 @@ class _UserPostScreenState extends State<UserPostScreen> {
 
   Widget _buildPostList(List<Post> posts) {
     return Expanded(
-      child: ListView.separated(
+      child: ListView.builder(
         itemCount: posts.length,
-        separatorBuilder: (context, index) => Divider(),
         itemBuilder: (context, index) {
           final post = posts[index];
           return PostItemView(post: post);

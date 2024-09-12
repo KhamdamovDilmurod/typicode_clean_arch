@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/user.dart';
+import '../../../../domain/entities/user.dart';
 
 class UserItemView extends StatelessWidget {
   final User user;
