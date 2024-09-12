@@ -23,7 +23,21 @@ class PostRepositoryImpl implements PostRepository {
     if (await networkInfo.isConnected) {
       try {
         final remotePosts = await remoteDataSource.getPosts();
-        return Right(remotePosts);
+
+        // For each post from the server, check if it exists in the local database
+        final postsWithSaveStatus = await Future.wait(remotePosts.map((post) async {
+          final localPost = await localDataSource.getPost(post.id);
+
+          // If the post exists in the local database, mark it as saved
+          return Post(
+            id: post.id,
+            title: post.title,
+            body: post.body,
+            userId: post.userId,
+          )..isSaved = localPost != null;
+        }).toList());
+
+        return Right(postsWithSaveStatus);
       } catch (e) {
         return Left(ServerFailure());
       }
@@ -58,4 +72,41 @@ class PostRepositoryImpl implements PostRepository {
       return Left(CacheFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Post>> getPost(int id) async {
+    try {
+      final localPostModel = await localDataSource.getPost(id);
+      if (localPostModel != null) {
+        return Right(localPostModel);
+      } else {
+        return Left(CacheFailure()); // Post not found
+      }
+    } catch (e) {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Post>>> fetchSavedPosts() async {
+    try {
+      // Fetch posts from the local data source
+      final localPosts = await localDataSource.getPosts();
+
+      // Convert the list of PostModel to List<Post> and set isSaved to true
+      final postsWithSaveStatus = localPosts.map((postModel) {
+        return Post(
+          id: postModel.id,
+          title: postModel.title,
+          body: postModel.body,
+          userId: postModel.userId,
+        )..isSaved = true; // Mark as saved
+      }).toList();
+
+      return Right(postsWithSaveStatus);
+    } catch (e) {
+      return Left(CacheFailure());
+    }
+  }
+
 }

@@ -9,6 +9,8 @@ import 'features/typicode/data/repositories/user_repository_impl.dart';
 import 'features/typicode/domain/repositories/post_repository.dart';
 import 'features/typicode/domain/repositories/user_repository.dart';
 import 'features/typicode/domain/usecases/get_post_usecase.dart';
+import 'features/typicode/domain/usecases/get_posts_usecase.dart';
+import 'features/typicode/domain/usecases/get_saved_posts_usecases.dart';
 import 'features/typicode/domain/usecases/get_user_usecase.dart';
 import 'features/typicode/domain/usecases/remove_post_usecase.dart';
 import 'features/typicode/domain/usecases/save_post_usecase.dart';
@@ -17,11 +19,15 @@ import 'features/typicode/presentation/bloc/posts_bloc.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  //! Features - Todo
+  //! Features - TYPICODE
   // Blocs
   sl.registerFactory(
     () => PostsBloc(
-        getPostsUseCase: sl(), removePostUseCase: sl(), savePostUseCase: sl()),
+        getPostsUseCase: sl(),
+        removePostUseCase: sl(),
+        savePostUseCase: sl(),
+        getPostUseCase: sl(),
+        getSavedPostsUseCase: sl()),
   );
 
   sl.registerFactory(
@@ -30,6 +36,8 @@ Future<void> init() async {
 
   // Use cases
   sl.registerLazySingleton(() => GetPostsUseCase(sl()));
+  sl.registerLazySingleton(() => GetSavedPostsUseCase(sl()));
+  sl.registerLazySingleton(() => GetPostUseCase(sl()));
   sl.registerLazySingleton(() => GetUsersUseCase(sl()));
   sl.registerLazySingleton(() => SavePostUseCase(sl()));
   sl.registerLazySingleton(() => RemovePostUseCase(sl()));
@@ -69,10 +77,6 @@ Future<void> init() async {
   sl.registerLazySingleton<http.Client>(
     () => http.Client(),
   );
-
-  // Data sources
-  //local data sources
-  // sl.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper.instance);
 
   // App Router
   // sl.registerLazySingleton<AppRouter>(() => AppRouter());

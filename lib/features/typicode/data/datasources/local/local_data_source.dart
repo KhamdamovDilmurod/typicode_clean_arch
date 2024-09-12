@@ -14,6 +14,7 @@ abstract class LocalDataSource {
   Future<List<PostModel>> getPosts();
   Future<void> updatePost(PostModel post);
   Future<void> deletePost(int id);
+  Future<PostModel?> getPost(int id);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -134,6 +135,22 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
+  Future<PostModel?> getPost(int id) async {
+    final db = await _db;
+    final List<Map<String, dynamic>> maps = await db.query(
+      postTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (maps.isNotEmpty) {
+      return PostModel.fromJson(maps.first);
+    } else {
+      return null; // Return null if the post is not found
+    }
+  }
+
+  @override
   Future<void> updatePost(PostModel post) async {
     final db = await _db;
     await db.update(
@@ -154,9 +171,12 @@ class LocalDataSourceImpl implements LocalDataSource {
     );
   }
 
+
+
   Future<void> closeDatabase() async {
     final db = await _db;
     await db.close();
   }
+
 
 }
