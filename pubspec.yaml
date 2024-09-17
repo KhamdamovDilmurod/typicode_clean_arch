@@ -46,6 +46,8 @@ dependencies:
   shimmer: ^3.0.0
   persistent_bottom_nav_bar: ^6.2.1
   fluttertoast: ^8.2.8
+  flutter_native_splash: ^2.4.1
+  flutter_launcher_icons:
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +59,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_logo.png"       # flutter pub get
+  remove_alpha_ios: true                          # flutter pub run flutter_launcher_icons:main
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +80,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/icons/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

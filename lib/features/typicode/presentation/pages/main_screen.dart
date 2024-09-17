@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:typicode_clean_arch/features/typicode/presentation/pages/main/favourite/favourited_screen.dart';
 import 'package:typicode_clean_arch/features/typicode/presentation/pages/main/home/home_screen.dart';
@@ -24,7 +25,11 @@ class _MainScreenState extends State<MainScreen> {
       _selectedIndex = index;
     });
   }
-
+@override
+  void initState() {
+    super.initState();
+    FlutterNativeSplash.remove();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +78,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Colors.amber[800],
+      selectedItemColor: kPrimaryColor,
       onTap: _onItemTapped,
     );
   }

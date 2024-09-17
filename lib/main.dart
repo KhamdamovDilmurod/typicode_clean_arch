@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:typicode_clean_arch/features/typicode/domain/usecases/get_posts_usecase.dart';
 import 'package:typicode_clean_arch/features/typicode/domain/usecases/get_user_usecase.dart';
 import 'package:typicode_clean_arch/features/typicode/domain/usecases/remove_post_usecase.dart';
 import 'package:typicode_clean_arch/features/typicode/domain/usecases/save_post_usecase.dart';
+import 'config/routes/app_routes.dart';
 import 'features/typicode/domain/usecases/get_post_usecase.dart';
 import 'features/typicode/domain/usecases/get_saved_posts_usecases.dart';
 import 'features/typicode/presentation/bloc/post_blog/posts_bloc.dart';
@@ -12,7 +14,8 @@ import 'features/typicode/presentation/pages/main_screen.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await di.init(); // Initialize GetIt
   runApp(MyApp());
 }
@@ -43,7 +46,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: MainScreen(),
-        // onGenerateRoute: di.sl<AppRouter>().onGenerateRoute,
+        onGenerateRoute: di.sl<AppRouter>().onGenerateRoute,
       ),
     );
   }

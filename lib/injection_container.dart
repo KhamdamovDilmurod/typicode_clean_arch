@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:typicode_clean_arch/features/typicode/presentation/bloc/user_blog/users_bloc.dart';
 import '../core/utilities/network_info.dart';
+import 'config/routes/app_routes.dart';
 import 'features/typicode/data/datasources/local/local_data_source.dart';
 import 'features/typicode/data/datasources/remote/remote_data_source.dart';
 import 'features/typicode/data/repositories/post_repository_impl.dart';
@@ -79,5 +80,5 @@ Future<void> init() async {
   );
 
   // App Router
-  // sl.registerLazySingleton<AppRouter>(() => AppRouter());
+  sl.registerLazySingleton<AppRouter>(() => AppRouter());
 }

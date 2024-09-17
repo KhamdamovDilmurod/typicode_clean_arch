@@ -19,9 +19,14 @@ radius: 30,
             backgroundColor: Colors.deepPurple,
             child: Text(user.name[0], style: TextStyle(color: Colors.white)),
           ),
-          Expanded(
+          SizedBox(
+
+            width: 100,
             child: Text(
-              user.name,
+              textAlign: TextAlign.center,
+              user.username,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold),

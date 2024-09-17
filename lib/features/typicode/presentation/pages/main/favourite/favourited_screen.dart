@@ -29,6 +29,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: kBackgroundColor,
         body: _buildBody(),
       ),
     );

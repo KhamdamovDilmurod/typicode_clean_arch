@@ -22,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late PostsBloc _postsBloc;
   late UsersBloc _usersBloc;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -32,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _postsBloc.add(FetchPosts());
     _usersBloc.add(FetchUsers());
 
-    print(" home created");
+    print("home created");
   }
 
   @override
@@ -47,28 +46,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildUserSection(),
-          _bannerSection(),
-          _buildSectionTitle('Posts'),
-          _buildPostSection(),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: _buildUserSection()), // User section
+          SliverToBoxAdapter(child: _bannerSection()), // Banner section
+          SliverToBoxAdapter(child: _buildSectionTitle('Posts')), // Section title
+          _buildPostSection(), // Post section
         ],
       ),
     );
   }
 
-
   Widget _bannerSection() {
-    return BannerSection();
+    return BannerSection(); // Your banner widget
   }
 
   Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+      ),
     );
   }
 
@@ -76,27 +76,25 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocBuilder<PostsBloc, PostsState>(
       builder: (context, state) {
         if (state is PostsLoading) {
-          return Expanded(child: ShimmerPostView());
+          return SliverFillRemaining(child: ShimmerPostView()); // Show shimmer while loading
         } else if (state is PostError) {
-          return Center(child: Text('Error: ${state.failure}'));
+          return SliverFillRemaining(child: Center(child: Text('Error: ${state.failure}')));
         } else if (state is PostsLoaded) {
           return _buildPostList(state.posts);
         }
-        return Center(child: Text('no post avialable'));
+        return SliverFillRemaining(child: Center(child: Text('No post available')));
       },
     );
   }
 
   Widget _buildPostList(List<Post> posts) {
-    return Expanded(
-      child: ListView.builder(
-        // key: _refreshIndicatorKey,
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+            (context, index) {
           final post = posts[index];
-          // No need to use BlocBuilder here; pass the post directly to the PostItemView
-          return PostItemView(post: post);
+          return PostItemView(post: post); // PostItemView widget for each post
         },
+        childCount: posts.length,
       ),
     );
   }
@@ -119,25 +117,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildUserList(List<User> users) {
     return SizedBox(
       height: 100,
-      child: ListView.separated(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: users.length,
-        separatorBuilder: (context, index) => Divider(),
         itemBuilder: (context, index) {
           final user = users[index];
-          return UserItemView(user: user);
+          return UserItemView(user: user); // UserItemView widget for each user
         },
       ),
     );
   }
 }
-
-/**
- * alpine
- * dmx
- * silver
- * star -
- * 5 memory card
- * packing department
- * water proof
- */
