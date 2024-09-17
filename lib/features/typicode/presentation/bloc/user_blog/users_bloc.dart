@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/error/failure.dart';
-import '../../domain/entities/user.dart';
-import '../../domain/usecases/get_user_usecase.dart';
+import '../../../../../core/error/failure.dart';
+import '../../../domain/entities/user.dart';
+import '../../../domain/usecases/get_user_usecase.dart';
 
 part 'users_event.dart';
 part 'users_state.dart';

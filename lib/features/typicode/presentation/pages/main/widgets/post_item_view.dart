@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../generated/assets.dart';
 import '../../../../domain/entities/post.dart';
-import '../../../bloc/posts_bloc.dart';
+import '../../../bloc/post_blog/posts_bloc.dart';
 
 class PostItemView extends StatefulWidget {
   final Post post;
@@ -45,7 +44,7 @@ class _PostItemViewState extends State<PostItemView> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: Image.asset(
-                    Assets.imagesImg1, // Replace with actual image
+                    Assets.imagesImg1, // Replace with actual image asset or use NetworkImage for dynamic images
                     height: 100,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -64,11 +63,12 @@ class _PostItemViewState extends State<PostItemView> {
                         isLiked = !isLiked;
                       });
 
+                      // Dispatch the relevant event to the PostsBloc
                       if (isLiked) {
-                        // Dispatch save post event
+                        // Dispatch save post event to the bloc
                         postsBloc.add(SavePost(post: widget.post));
                       } else {
-                        // Dispatch remove post event
+                        // Dispatch remove post event to the bloc
                         postsBloc.add(RemovePost(id: widget.post.id));
                       }
                     },

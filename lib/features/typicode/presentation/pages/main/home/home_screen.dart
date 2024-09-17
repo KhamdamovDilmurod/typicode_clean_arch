@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:typicode_clean_arch/features/typicode/presentation/pages/main/widgets/shimmer_post_view.dart';
 
 import '../../../../../../core/utilities/colors.dart';
 import '../../../../domain/entities/post.dart';
 import '../../../../domain/entities/user.dart';
-import '../../../bloc/posts_bloc.dart';
-import '../../../bloc/users_bloc.dart';
+import '../../../bloc/post_blog/posts_bloc.dart';
+import '../../../bloc/user_blog/users_bloc.dart';
 import '../widgets/banner_section.dart';
 import '../widgets/post_item_view.dart';
 import '../widgets/shimmer_user_view.dart';
@@ -21,8 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late PostsBloc _postsBloc;
   late UsersBloc _usersBloc;
-
-  final ScrollController _scrollController = ScrollController();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -31,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _usersBloc = BlocProvider.of<UsersBloc>(context);
     _postsBloc.add(FetchPosts());
     _usersBloc.add(FetchUsers());
+
+    print(" home created");
   }
 
   @override
@@ -38,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: kBackgroundColor,
-        appBar: _appBar(),
         body: _buildBody(),
       ),
     );
@@ -59,24 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  PreferredSizeWidget _appBar() {
-    return AppBar(
-      iconTheme: IconThemeData(color: Colors.white),
-      flexibleSpace: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [kPrimaryColor, kAccentColor],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-      ),
-      title: Text(
-        "Blog App",
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
 
   Widget _bannerSection() {
     return BannerSection();
@@ -93,14 +76,28 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocBuilder<PostsBloc, PostsState>(
       builder: (context, state) {
         if (state is PostsLoading) {
-          return Center(child: CircularProgressIndicator());
+          return Expanded(child: ShimmerPostView());
         } else if (state is PostError) {
           return Center(child: Text('Error: ${state.failure}'));
         } else if (state is PostsLoaded) {
           return _buildPostList(state.posts);
         }
-        return Center(child: Text('No posts available'));
+        return Center(child: Text('no post avialable'));
       },
+    );
+  }
+
+  Widget _buildPostList(List<Post> posts) {
+    return Expanded(
+      child: ListView.builder(
+        // key: _refreshIndicatorKey,
+        itemCount: posts.length,
+        itemBuilder: (context, index) {
+          final post = posts[index];
+          // No need to use BlocBuilder here; pass the post directly to the PostItemView
+          return PostItemView(post: post);
+        },
+      ),
     );
   }
 
@@ -116,19 +113,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         return Center(child: Text('No users available'));
       },
-    );
-  }
-
-  Widget _buildPostList(List<Post> posts) {
-    return Expanded(
-      child: ListView.builder(
-        controller: _scrollController,
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          final post = posts[index];
-          return PostItemView(post: post);
-        },
-      ),
     );
   }
 
@@ -148,5 +132,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-
-
+/**
+ * alpine
+ * dmx
+ * silver
+ * star -
+ * 5 memory card
+ * packing department
+ * water proof
+ */

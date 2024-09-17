@@ -16,6 +16,8 @@ class _BannerSectionState extends State<BannerSection> {
   PageController _pageController = PageController();
   int _currentPage = 0;
 
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
@@ -33,7 +35,13 @@ class _BannerSectionState extends State<BannerSection> {
     });
   }
 
-  Timer? _timer;
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

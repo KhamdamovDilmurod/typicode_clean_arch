@@ -13,11 +13,24 @@ final class PostsLoading extends PostsState {
   @override
   List<Object> get props => [];
 }
+final class PostsFetchLoading extends PostsState {
+  @override
+  List<Object> get props => [];
+}
 
 final class PostsLoaded extends PostsState {
   final List<Post> posts;
 
   PostsLoaded({required this.posts});
+
+  @override
+  List<Object> get props => [posts];
+}
+
+final class SavedPostsLoaded extends PostsState {
+  final List<Post> posts;
+
+  SavedPostsLoaded({required this.posts});
 
   @override
   List<Object> get props => [posts];
@@ -42,7 +55,6 @@ final class PostRemoved extends PostsState {
 
 final class PostSaved extends PostsState {
   final Post post;
-
   PostSaved({required this.post});
 
   @override

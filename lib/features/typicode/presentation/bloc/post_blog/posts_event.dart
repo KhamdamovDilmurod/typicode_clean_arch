@@ -10,8 +10,6 @@ sealed class PostsEvent extends Equatable {
 // Event to fetch posts
 final class FetchPosts extends PostsEvent {}
 
-final class FetchSavedPosts extends PostsEvent {}
-
 // Event to remove a post
 final class RemovePost extends PostsEvent {
   final int id;
@@ -31,3 +29,6 @@ final class SavePost extends PostsEvent {
   @override
   List<Object> get props => [post];
 }
+
+final class FetchSavedPosts extends PostsEvent {}
+

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-import 'package:typicode_clean_arch/features/typicode/presentation/pages/main/favourite/favourites_screen.dart';
+import 'package:typicode_clean_arch/features/typicode/presentation/pages/main/favourite/favourited_screen.dart';
 import 'package:typicode_clean_arch/features/typicode/presentation/pages/main/home/home_screen.dart';
 import '../../../../core/utilities/colors.dart';
 
@@ -12,47 +12,69 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
-  PersistentTabController _controller = PersistentTabController(initialIndex: 0);
+  int _selectedIndex = 0;
+
+  final List<Widget> _widgetOptions = <Widget>[
+    HomeScreen(),
+    FavoritesScreen()
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: _buildBottomNavBar(),
+      backgroundColor: kBackgroundColor,
+      appBar: _appBar(),
+      body: _buildBody(),
+      bottomNavigationBar: _navBar(),
     );
   }
 
-
-  Widget _buildBottomNavBar() {
-    return PersistentTabView(
-      context,
-      controller: _controller,
-      screens: _buildScreens(),
-      items: _navBarItems(),
-      navBarStyle: NavBarStyle.style1,
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      iconTheme: IconThemeData(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [kPrimaryColor, kAccentColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+      ),
+      title: Text(
+        "Blog App",
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
     );
   }
 
-  List<Widget> _buildScreens() {
-    return [
-      HomeScreen(),
-      FavoritesScreen()
-    ];
+  Widget _buildBody() {
+    return Center(
+      child: _widgetOptions.elementAt(_selectedIndex),
+    );
   }
 
-  List<PersistentBottomNavBarItem> _navBarItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
-        title: "Home",
-        activeColorPrimary: Colors.blue,
-        inactiveColorPrimary: Colors.grey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.favorite),
-        title: "Favourites",
-        activeColorPrimary: Colors.blue,
-        inactiveColorPrimary: Colors.grey,
-      ),
-    ];
+  Widget _navBar(){
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite),
+          label: 'Favorites',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Colors.amber[800],
+      onTap: _onItemTapped,
+    );
   }
 }
